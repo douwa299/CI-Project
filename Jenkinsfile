@@ -1,5 +1,8 @@
 pipeline {
     agent any
+     environment {
+        PATH = "C:\\Users\\tech\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\tech\\AppData\\Local\\Programs\\Python\\Python313\\Scripts;${env.PATH}"
+    }
     stages {
         stage('Nettoyage Workspace') {
             steps {
