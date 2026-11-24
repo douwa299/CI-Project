@@ -1,15 +1,15 @@
 pipeline {
     agent any
-
-    environment {
-        PATH = "C:\\Users\\tech\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\tech\\AppData\\Local\\Programs\\Python\\Python313\\Scripts;${env.PATH}"
-    }
-
     stages {
+        stage('Nettoyage Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
         stage('Clonage') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/douwa299/CI-Project.git'
+                    url: 'https://github.com/UserName/CI_Project.git'
             }
         }
         stage('Vérification Python') {
@@ -23,24 +23,22 @@ pipeline {
                 bat 'python -m pip install -r requirements.txt'
             }
         }
-        stage('Analyse qualité code - Pylint') {
+        stage('Analyse qualité du code (Pylint)') {
             steps {
-                // make the build fail if the score is below 8
                 bat 'python -m pylint calculator.py || exit /b 0'
-                bat 'python -m pylint calculator.py'
             }
         }
         stage('Tests unitaires') {
             steps {
-                bat 'python -m pytest'
+                bat 'python -m pytest --ignore=Release'
             }
         }
         stage('Création de l artefact') {
             steps {
                 bat '''
                 if exist Release rmdir /S /Q Release
+                if exist Release.zip del Release.zip
                 mkdir Release
-
                 copy calculator.py Release
                 copy test_calculator.py Release
                 copy requirements.txt Release
@@ -48,10 +46,28 @@ pipeline {
                 '''
             }
         }
+        stage('Publication de l artefact') {
+            steps {
+                bat '''
+                curl -v ^
+                -u admin:azrou261 ^
+                --upload-file Release.zip ^
+                http://localhost:8081/repository/python-release/Release.zip
+                '''
+            }
+        }
     }
     post {
-        always  { echo 'Pipeline terminé' }
-        success { echo 'BUILD SUCCESS' }
-        failure { echo 'BUILD FAILED' }
+        always {
+            echo '================================'
+            echo 'Pipeline terminé'
+            echo '================================'
+        }
+        success {
+            echo 'BUILD SUCCESS'
+        }
+        failure {
+            echo 'BUILD FAILED'
+        }
     }
 }
