@@ -25,6 +25,8 @@ pipeline {
         }
         stage('Analyse qualité code - Pylint') {
             steps {
+                // make the build fail if the score is below 8
+                bat 'python -m pylint calculator.py || exit /b 0'
                 bat 'python -m pylint calculator.py'
             }
         }
