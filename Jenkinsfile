@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    environment {
+        PATH = "C:\\Users\\tech\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\tech\\AppData\\Local\\Programs\\Python\\Python313\\Scripts;${env.PATH}"
+    }
+
     stages {
         stage('Clonage') {
             steps {
@@ -25,14 +30,8 @@ pipeline {
         }
     }
     post {
-        always {
-            echo 'Pipeline terminé'
-        }
-        success {
-            echo 'BUILD SUCCESS'
-        }
-        failure {
-            echo 'BUILD FAILED'
-        }
+        always  { echo 'Pipeline terminé' }
+        success { echo 'BUILD SUCCESS' }
+        failure { echo 'BUILD FAILED' }
     }
 }
