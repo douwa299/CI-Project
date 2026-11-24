@@ -52,7 +52,7 @@ pipeline {
                 curl -v ^
                 -u admin:azrou261 ^
                 --upload-file Release.zip ^
-                http://localhost:8081/repository/python-release/Release.zip
+                http://localhost:8082/repository/python-release/Release.zip
                 '''
             }
         }
