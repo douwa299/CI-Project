@@ -9,7 +9,7 @@ pipeline {
         stage('Clonage') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/UserName/CI_Project.git'
+                    url: 'https://github.com/douwa299/CI-Project'
             }
         }
         stage('Vérification Python') {
