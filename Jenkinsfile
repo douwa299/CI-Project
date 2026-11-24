@@ -35,6 +35,19 @@ pipeline {
                 bat 'python -m pytest'
             }
         }
+        stage('Création de l artefact') {
+            steps {
+                bat '''
+                if exist Release rmdir /S /Q Release
+                mkdir Release
+
+                copy calculator.py Release
+                copy test_calculator.py Release
+                copy requirements.txt Release
+                powershell Compress-Archive -Path Release\\* -DestinationPath Release.zip -Force
+                '''
+            }
+        }
     }
     post {
         always  { echo 'Pipeline terminé' }
